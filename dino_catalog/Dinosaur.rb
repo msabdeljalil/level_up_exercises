@@ -15,9 +15,9 @@ class Dinosaur
     @description            = attrib[:description]
   end
 
-  def assign_carnivore(d)
-    return d if d
-    return nil if !@diet
+  def assign_carnivore(carnivore_attr)
+    return carnivore_attr if carnivore_attr
+    return nil unless @diet
     @@carnivore_types.include?(@diet) ? 'Yes' : 'No'
   end
 
