@@ -1,18 +1,27 @@
 class Arrowhead
 
   class InvalidRegionError < RuntimeError
+    # Error msg Option 1: overwrite the to_s method
     def to_s
       "Unknown region, please provide a valid region."
     end
   end
 
   class InvalidShapeError < RuntimeError
-    def to_s
-      "Unknown shape value. Are you sure you know what you're talking about?"
+    # Error msg Option 2: 'super' the initialize method with a string
+    def initialize
+      super "Unknown shape value. Are you sure you know what you're talking about?"
     end
+
   end
 
-  # This seriously belongs in a database.
+    # Error msg Option 3: Create a messages/hash that you can call 
+  MESSAGE = { 
+    InvalidShapeError: "Unknown shape value. Are you sure you know what you're talking about?",
+    InvalidRegionError: "Unknown region, please provide a valid region."
+  }
+
+  # Refactor by taking out into seperate json file
   CLASSIFICATIONS = {
     far_west: {
       notched: "Archaic Side Notch",
@@ -40,8 +49,8 @@ class Arrowhead
   end
 
   def self.classify_shape(shapes, target_shape)
-    shapes.fetch(target_shape) { raise InvalidShapeError }
+    shapes.fetch(target_shape) { raise VAR }
   end
 end
 
-puts Arrowhead.classify(:northern_plains, :bifurcated)
+Arrowhead.classify(:northern_plains, :bircated)
