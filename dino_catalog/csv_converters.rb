@@ -1,4 +1,4 @@
-module CSVConverters
+module CsvConverters
   ::CSV::HeaderConverters[:conv_genus] = lambda do|h|
     begin
       return 'Name' if h.downcase == 'genus'

@@ -1,11 +1,18 @@
+#  Should I make a single method that asks the user for all their input?
+# That way, the only resonsbility of filter emthods is to retrieve data.
+# However, that breaks Closed to Mode / Open to expansion principle cuz
+# you'd have to edit this method to change filters rather than just sticking on
+# another method 
+
+# It seems extra difficult here cuz I'm dealing with user interaction on the command line 
 require 'csv'
 require 'json'
 require 'table_print'
 require './Dinosaur'
-require './CSVConverters.rb'
+require './csv_converters.rb'
 
 class Catalog
-  include CSVConverters
+  include CsvConverters
   attr_reader :dinosaurs
 
   def initialize(*csv_list)
@@ -18,50 +25,68 @@ class Catalog
 
   def bipeds
     tp @dinosaurs.uniq, :name, :walking
-    ansr = ask_user(%w(B Q A), "B)iped or Q)uadruped or A)ll?")
-    return self if ansr == 'A'
-    ansr == 'B' ? filter('walking', 'Biped') : filter('walking', 'Quadruped')
+    answer = ask_user(%w(B Q A), "B)iped or Q)uadruped or A)ll?")
+
+    if answer == 'B'
+      filter('walking', 'Biped')
+    elsif answer == 'Q'
+      filter('walking', 'Quadruped')
+    end
+
     self
   end
 
   def carnivores
     tp @dinosaurs, :name, :carnivore
-    ansr = ask_user(%w(C N A), "C)arnivore, N)not carnivore, or A)ll")
-    return self if ansr == 'A'
-    ansr == 'C' ? filter('carnivore', 'Yes') : filter('carnivore', 'No')
+    answer = ask_user(%w(C N A), "C)arnivore, N)not carnivore, or A)ll")
+
+    if answer == 'C'
+      filter('carnivore', 'Yes')
+    elsif answer == 'N'
+      filter('carnivore', 'No')
+    end
+
     self
   end
 
   def periods
     tp @dinosaurs.uniq, :name, :period
-    ans = ask_user(
+    answer = ask_user(
       @dinosaurs.map { |dino| dino.period.capitalize } << 'A',
       "What time period? or A)ll",
     )
-    ans == 'A' ? (return self) : filter('period', ans.capitalize)
+
+    if answer == 'A'
+      return self
+    else 
+      filter('period', answer)
+    end
+
     self
   end
 
   def size
     tp @dinosaurs, :name, :weight
-    ansr = ask_user(%w(G L A), "G)reater or L)ess than 2 tons? or A)ll")
+    answer = ask_user(%w(G L A), "G)reater or L)ess than 2 tons? or A)ll")
 
-    if ansr == 'G'
-      @dinosaurs.select! { |dino| dino.weight && dino.weight > 2000 }
-    elsif ansr == 'L'
-      @dinosaurs.select! { |dino| dino.weight && dino.weight <= 2000 }
+    if answer == 'G'
+      filter('greater_than_2tons', true)
+    elsif answer == 'L'
+      filter('greater_than_2tons', false)
     end
     self
   end
 
   def output
-    @dinosaurs.empty? ? puts('No dinosaurs fit your criteria.') : tp(dinosaurs)
+    if @dinosaurs.empty? 
+      puts('No dinosaurs fit your criteria.') 
+    else
+      tp(dinosaurs)
+    end
   end
 
   def to_json
-    results = []
-    @dinosaurs.each { |d| results << d.to_h.to_json }
-    results
+    @dinosaurs.map(&:to_json)
   end
 
   private
@@ -77,7 +102,8 @@ class Catalog
 
   def filter(attrib, value)
     @dinosaurs.select! do |dino|
-      dino.instance_variable_get("@#{attrib}") == value
+      # puts dino['attrib'] # TODO: Get this to work
+      dino.instance_variable_get("@#{attrib.capitalize}") == value
     end
   end
 
