@@ -1,18 +1,19 @@
 require 'abanalyzer'
 
 class SplitTest
-  def initialize(cohort_a, cohort_b)
-    @cohort_a = cohort_a
-    @cohort_b = cohort_b
+  def initialize(cohort_1, cohort_2)
+    @cohort_1 = cohort_1
+    @cohort_2 = cohort_2
+    @ab_test = tester
   end
 
   # at 0.05 level of significance
   def different?
-    tester.different?
+    @ab_test.different?
   end
 
   def chisquare_p_value
-    tester.chisquare_p.round(4)
+    @ab_test.chisquare_p.round(5)
   end
 
   private
@@ -23,13 +24,13 @@ class SplitTest
 
   def values
     {
-      cohort_a: {
-        sample_size: @cohort_a.sample_size,
-        success: @cohort_a.conversions,
+      cohort_1: {
+        sample_size: @cohort_1.sample_size,
+        success: @cohort_1.conversions,
       },
-      cohort_b: {
-        sample_size: @cohort_b.sample_size,
-        success: @cohort_b.conversions,
+      cohort_2: {
+        sample_size: @cohort_2.sample_size,
+        success: @cohort_2.conversions,
       },
     }
   end

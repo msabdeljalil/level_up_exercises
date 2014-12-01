@@ -1,10 +1,11 @@
-require 'json'
+  require 'json'
 require_relative 'cohort'
 
 class Parser
-  def parse(file)
-    data = JSON.parse(File.read(file), symbolize_names: true)
-    seperate_into_cohorts(create_visitors(data))
+  def parse(filename)
+    data = JSON.parse(File.read(filename), symbolize_names: true)
+    visitors = create_visitors(data)
+    seperate_into_cohorts(visitors)
   end
 
   private
@@ -15,12 +16,11 @@ class Parser
 
   def seperate_into_cohorts(visitors)
     grouped = visitors.group_by(&:cohort)
-    [Cohort.new(grouped['A']), Cohort.new(grouped['B'])]
-  end
-end
-
-Visitor = Struct.new(:visit_date, :cohort, :result) do
-  def conversion?
-    result == 1
+    cohort_1_name = grouped.keys[0]
+    cohort_2_name = grouped.keys[1]
+    [
+      Cohort.new(cohort_1_name, grouped[cohort_1_name]),
+      Cohort.new(cohort_2_name, grouped[cohort_2_name]),
+    ]
   end
 end

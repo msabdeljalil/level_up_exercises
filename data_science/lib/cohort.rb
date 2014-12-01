@@ -2,9 +2,10 @@ require 'abanalyzer'
 
 class Cohort
   CONFIDENCE_LEVEL = 0.95
-  attr_reader :visitors
+  attr_reader :name, :visitors
 
-  def initialize(visitors = [])
+  def initialize(name, visitors = [])
+    @name = name
     @visitors = visitors
   end
 
@@ -27,7 +28,13 @@ class Cohort
   end
 
   def confidence_interval
-    raise ArgumentError, "Sample size cannot be 0" unless sample_size > 0
+    raise ArgumentError, "Sample size must be > 0" unless sample_size > 0
     ABAnalyzer.confidence_interval(conversions, sample_size, CONFIDENCE_LEVEL)
+  end
+end
+
+Visitor = Struct.new(:visit_date, :cohort, :result) do
+  def conversion?
+    result == 1
   end
 end
