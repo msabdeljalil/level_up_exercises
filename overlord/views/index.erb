@@ -1,0 +1,36 @@
+<p><%= start_time %></p>
+<p>Is it active? method: <%= @bomb.active? %></p>
+
+<div id="main">
+    <div id="bombState" href="javascript:void(0)">Bomb Status: <%= @bomb %></div>
+
+    <% unless @bomb.active? %>
+        <form id="activation" action="/" method="POST">
+            <label for="active_code">Activation Code</label>
+            <input type="text" placeholder="Enter Activation Code" name="active_code">   
+            <input type="submit" value="submit">
+        </form>
+    <% else %>
+        <p>GET READY FOR A BANG (unless you deactivate it...)</p>
+        <iframe src="http://free.timeanddate.com/countdown/i4fvtxev/n64/cf100/cm0/cu4/ct0/cs0/ca0/cr0/ss0/cac000/cpc000/pcfff/tcfff/fs100/szw320/szh135/tatTime%20left%20to%20Event%20in/tac000/tptTime%20since%20Event%20started%20in/tpc000/mac000/mpc000/iso2014-12-03T00:00:00" frameborder="0" width="320" height="135"></iframe>
+        <form id="deactivation">
+            <label for="dcode">Deactivation Code</label>
+            <input type="text" name="dcode" placeholder="Enter Deactivation Code">
+            <input type="submit" value="submit" name="submit">
+        </form>
+    <% end %>
+</div>
+
+
+<script>
+
+    $("#deactivation").submit(function(event){
+        event.preventDefault()
+        response = $(this).serializeArray()[0]['value']
+        data = { dcode: response }
+        $.post("/deactivate", data, function(resp){
+            console.log(resp)
+            location.reload()
+        })
+    });
+</script>
