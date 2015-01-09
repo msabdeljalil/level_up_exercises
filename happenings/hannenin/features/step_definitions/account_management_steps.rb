@@ -1,9 +1,8 @@
-Given(/^a login with "(.*?)" and password "(.*?)"$/) do |arg1, arg2|
-  User.create!(email: arg1, password: arg2)
+Given(/^I am a new user to the site$/) do
+    visit '/'
 end
 
-When(/^I provide my login and desired password$/) do
-  visit '/'
+When(/^I create an account$/) do
   click_link 'Sign In'
   expect(current_path).to eq(new_user_session_path)
   within('form') do
@@ -14,10 +13,9 @@ When(/^I provide my login and desired password$/) do
 end
 
 Then(/^I should be logged in$/) do
-  expect(page).to have()
+  expect(page).to have_content()
 end
 
-
-Given(/^I am a new user to the site$/) do
-  pending # express the regexp above with the code you wish you had
+Given(/^a login with "(.*?)" and password "(.*?)"$/) do |arg1, arg2|
+  User.create!(email: arg1, password: arg2)
 end
