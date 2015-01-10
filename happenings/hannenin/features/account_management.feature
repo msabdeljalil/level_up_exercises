@@ -6,12 +6,12 @@ Feature: Account Management
   Scenario: Successful account creation
    Given I am a new user to the site
    When I create an account
-   Then I should be logged in
+   Then I should be successfully signed up
 
-#  Scenario: Successful account login
-#     Given a login with "test@test.com" and password "password"
-#     When I provide my login and desired password
-#     Then I should be logged in
+ Scenario: Successful account login
+    Given a login with "test@test.com" and password "password"
+    When I login with "test@test.com" and password "password"
+    Then I should be successfully signed in
 #
 #   Scenario: Successful logout
 #      Given a valid user name "csr@somedomain.com" and password "secret"

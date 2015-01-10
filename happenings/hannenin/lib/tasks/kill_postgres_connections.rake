@@ -1,7 +1,7 @@
 task :kill_postgres_connections => :environment do
   db_name = "#{File.basename(Rails.root)}_#{Rails.env}"
   sh = <<EOF
-ps xa \
+  ps xa \
   | grep postgres: \
   | grep #{db_name} \
   | grep -v grep \
@@ -11,4 +11,4 @@ EOF
   puts `#{sh}`
 end
 
-task "db:drop" => :kill_postgres_connections
+# task "db:drop" => :kill_postgres_connections
