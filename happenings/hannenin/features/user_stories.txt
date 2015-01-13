@@ -1,6 +1,4 @@
-User signs up 
-User logs in 
-User searches for theatre performances
+User searches for theatre performances across time
 User views theatre performance details
 User adds theatre performance to calendar
 User exports calendar
